@@ -1,0 +1,85 @@
+# =========================
+
+# Unity (same as before)
+
+# =========================
+
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+
+MemoryCaptures/
+Recordings/
+
+.vs/
+.idea/
+
+.DS_Store
+Thumbs.db
+
+!*.meta
+
+# =========================
+
+# Python / ML
+
+# =========================
+
+**pycache**/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+
+.venv/
+venv/
+env/
+
+# Jupyter Notebook
+
+.ipynb_checkpoints/
+
+# Logs
+
+*.log
+
+# Python packaging
+
+build/
+dist/
+*.egg-info/
+
+# =========================
+
+# ML Models / Data (optional)
+
+# =========================
+
+# Uncomment if you DON'T want to upload models
+
+# *.pkl
+
+# *.h5
+
+# *.pt
+
+# *.csv
+
+# *.npy
+
+# =========================
+
+# Large files (use Git LFS)
+
+# =========================
+
+# *.fbx filter=lfs diff=lfs merge=lfs -text
+
+# *.pt filter=lfs diff=lfs merge=lfs -text
+
+# *.h5 filter=lfs diff=lfs merge=lfs -text
