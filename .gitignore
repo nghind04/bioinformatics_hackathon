@@ -1,9 +1,3 @@
-# =========================
-
-# Unity (same as before)
-
-# =========================
-
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -16,6 +10,8 @@ MemoryCaptures/
 Recordings/
 
 .vs/
+.vscode/*
+!.vscode/extensions.json
 .idea/
 
 .DS_Store
@@ -23,63 +19,52 @@ Thumbs.db
 
 !*.meta
 
-# =========================
-
-# Python / ML
-
-# =========================
-
-**pycache**/
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
 
 # Virtual environments
-
 .venv/
 venv/
 env/
 
 # Jupyter Notebook
-
 .ipynb_checkpoints/
 
 # Logs
-
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Frontend / Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editor / IDE files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # Python packaging
-
-build/
-dist/
 *.egg-info/
 
-# =========================
-
-# ML Models / Data (optional)
-
-# =========================
-
-# Uncomment if you DON'T want to upload models
-
+# Optional large/generated ML files
 # *.pkl
-
 # *.h5
-
 # *.pt
-
 # *.csv
-
 # *.npy
 
-# =========================
-
-# Large files (use Git LFS)
-
-# =========================
-
+# Large files with Git LFS
 # *.fbx filter=lfs diff=lfs merge=lfs -text
-
 # *.pt filter=lfs diff=lfs merge=lfs -text
-
 # *.h5 filter=lfs diff=lfs merge=lfs -text
