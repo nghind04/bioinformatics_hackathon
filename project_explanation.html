@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pharmacogenomics ML Project – Explanation</title>
+<style>
+  @page { margin: 1.2in 1in; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #1a1a2e;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 30px;
+    background: #fff;
+  }
+  h1 {
+    font-size: 26px;
+    color: #0d3b66;
+    border-bottom: 3px solid #e94f37;
+    padding-bottom: 10px;
+    margin-top: 0;
+  }
+  h2 {
+    font-size: 18px;
+    color: #0d3b66;
+    border-left: 5px solid #e94f37;
+    padding-left: 10px;
+    margin-top: 36px;
+  }
+  h3 {
+    font-size: 14px;
+    color: #393e46;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #555;
+    margin-top: -6px;
+    margin-bottom: 28px;
+  }
+  .box {
+    background: #f0f7ff;
+    border: 1px solid #b8d4f0;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .box.green { background: #f0fff4; border-color: #a3d9b1; }
+  .box.yellow { background: #fffdf0; border-color: #e0d08a; }
+  .box.red { background: #fff5f5; border-color: #f0b8b8; }
+  code, .mono {
+    font-family: 'Courier New', Courier, monospace;
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 12px;
+  }
+  pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    overflow-x: auto;
+    line-height: 1.6;
+  }
+  pre .key { color: #89b4fa; }
+  pre .val { color: #a6e3a1; }
+  pre .str { color: #f9e2af; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 12px;
+  }
+  th {
+    background: #0d3b66;
+    color: white;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  td { padding: 7px 10px; border-bottom: 1px solid #ddd; }
+  tr:nth-child(even) td { background: #f9f9f9; }
+  .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+  }
+  .poor    { background: #e74c3c; }
+  .inter   { background: #e67e22; }
+  .normal  { background: #27ae60; }
+  .ultra   { background: #2980b9; }
+  ul li, ol li { margin-bottom: 6px; }
+  .pagebreak { page-break-before: always; }
+  .footer {
+    margin-top: 50px;
+    font-size: 11px;
+    color: #888;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    text-align: center;
+  }
+  .flow {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 14px 0;
+    font-size: 12px;
+  }
+  .flow-step {
+    background: #0d3b66;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+  }
+  .flow-arrow { font-size: 18px; color: #999; }
+</style>
+</head>
+<body>
+
+<h1>Pharmacogenomics ML Teaching Tool</h1>
+<div class="subtitle">CS 171 – SJSU Fall 2025 &nbsp;|&nbsp; Project Documentation &amp; Reference Guide</div>
+
+<!-- ─── SECTION 1 ─────────────────────────────────── -->
+<h2>1. What Is This Project?</h2>
+
+<p>
+This project builds a <strong>machine learning model</strong> that predicts how a person's body will process a drug based on their genetic variant. This area of science is called <strong>pharmacogenomics</strong> — the study of how genes affect drug response.
+</p>
+
+<div class="box">
+<strong>Core Question the Model Answers:</strong><br>
+Given a patient's gene variant (e.g., <code>CYP2D6*4/*1</code>) and the drug they are taking (e.g., <em>codeine</em>), is this patient a <em>Poor</em>, <em>Intermediate</em>, <em>Normal</em>, or <em>Ultrarapid</em> metabolizer?
+</div>
+
+<p>
+Knowing the metabolizer type matters clinically: a <strong>poor metabolizer</strong> cannot break down the drug efficiently, so it accumulates in the body and may cause toxicity. An <strong>ultrarapid metabolizer</strong> breaks down the drug too fast, making it ineffective.
+</p>
+
+<!-- ─── SECTION 2 ─────────────────────────────────── -->
+<h2>2. The Two Genes Covered</h2>
+
+<table>
+<tr><th>Gene</th><th>Full Name</th><th>Common Drugs Affected</th></tr>
+<tr><td><strong>CYP2D6</strong></td><td>Cytochrome P450 2D6</td><td>Codeine, Tramadol, Tamoxifen, Antidepressants (SSRIs), Antipsychotics</td></tr>
+<tr><td><strong>CYP2C19</strong></td><td>Cytochrome P450 2C19</td><td>Clopidogrel, Omeprazole, Antidepressants, Antifungals</td></tr>
+</table>
+
+<p>Both genes are enzymes in the liver that metabolize roughly 25–30% of all prescription drugs.</p>
+
+<!-- ─── SECTION 3 ─────────────────────────────────── -->
+<h2>3. Dataset</h2>
+
+<h3>Source</h3>
+<p>
+<strong>PharmGKB / ClinPGx</strong> — a curated clinical pharmacogenomics database. File used: <code>var_drug_ann.tsv</code> (12,852 rows total). Only CYP2D6 and CYP2C19 rows with metabolizer labels were used.
+</p>
+
+<h3>How Raw Data Was Cleaned</h3>
+<p>
+Each row in the raw file describes a <em>comparison study</em> — it lists multiple alleles and assigns a metabolizer label to the overall group. To train a model, we needed one label per individual diplotype (<code>*A/*B</code>). A sentence parser was written to:
+</p>
+<ol>
+  <li>Extract all <code>*A/*B</code> diplotype patterns from the sentence text.</li>
+  <li>Split on phrases like <em>"as compared to"</em> to separate subject allele from comparison.</li>
+  <li>Assign the metabolizer label only to the <em>subject</em> diplotype.</li>
+  <li>Deduplicate by <strong>majority vote</strong> when the same diplotype appeared in multiple rows.</li>
+</ol>
+
+<div class="box green">
+<strong>Result:</strong> 186 raw rows → 691 extracted diplotype-label pairs → <strong>106 clean, deduplicated training examples</strong> saved as <code>cleaned_data.csv</code>.
+</div>
+
+<!-- ─── SECTION 4 ─────────────────────────────────── -->
+<h2>4. Star Allele System &amp; Activity Scores</h2>
+
+<p>
+Genes like CYP2D6 are reported using <strong>star allele notation</strong>: <code>*1</code> is normal, <code>*4</code> is non-functional, etc. A patient has two copies of each gene (one from each parent), so their genotype is written as a <strong>diplotype</strong>: <code>*1/*4</code>.
+</p>
+
+<p>
+Each star allele has an <strong>activity score</strong> defined by CPIC (Clinical Pharmacogenomics Implementation Consortium):
+</p>
+
+<table>
+<tr><th>Activity Score</th><th>Meaning</th><th>Example Alleles</th></tr>
+<tr><td><code>0.0</code></td><td>No function (null)</td><td>CYP2D6*4, *5, *6</td></tr>
+<tr><td><code>0.5</code></td><td>Reduced function</td><td>CYP2D6*10, *41; CYP2C19*17</td></tr>
+<tr><td><code>1.0</code></td><td>Normal function</td><td>CYP2D6*1, *2; CYP2C19*1</td></tr>
+<tr><td><code>1.5</code></td><td>Increased function</td><td>Some CYP2C19 variants</td></tr>
+<tr><td><code>2.0</code></td><td>Gene duplication</td><td>CYP2D6*1x2 (2 functional copies)</td></tr>
+</table>
+
+<p>
+The <strong>Activity Sum</strong> = score of allele 1 + score of allele 2. This maps directly to metabolizer class:
+</p>
+
+<table>
+<tr><th>Activity Sum</th><th>Metabolizer Class</th></tr>
+<tr><td>0.0</td><td><span class="pill poor">Poor Metabolizer</span></td></tr>
+<tr><td>0.5 – 1.0</td><td><span class="pill inter">Intermediate Metabolizer</span></td></tr>
+<tr><td>1.25 – 2.0</td><td><span class="pill normal">Normal Metabolizer</span></td></tr>
+<tr><td>&gt; 2.0</td><td><span class="pill ultra">Ultrarapid Metabolizer</span></td></tr>
+</table>
+
+<!-- ─── SECTION 5 ─────────────────────────────────── -->
+<div class="pagebreak"></div>
+<h2>5. ML Pipeline – Step by Step</h2>
+
+<div class="flow">
+  <div class="flow-step">Raw TSV Data</div><div class="flow-arrow">→</div>
+  <div class="flow-step">Parse &amp; Extract Diplotypes</div><div class="flow-arrow">→</div>
+  <div class="flow-step">Add Activity Scores</div><div class="flow-arrow">→</div>
+  <div class="flow-step">Encode Features</div><div class="flow-arrow">→</div>
+  <div class="flow-step">Train Random Forest</div><div class="flow-arrow">→</div>
+  <div class="flow-step">Predict &amp; Explain</div>
+</div>
+
+<h3>Features Used by the Model</h3>
+<table>
+<tr><th>Feature</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>act_sum</code></td><td>Numeric</td><td>Activity score sum (most important feature)</td></tr>
+<tr><td><code>has_*4</code>, <code>has_*1</code>, …</td><td>Binary (0/1)</td><td>Whether each common allele is present in the diplotype</td></tr>
+<tr><td><code>drug_codeine</code>, …</td><td>Binary (0/1)</td><td>One-hot encoding of the drug name</td></tr>
+</table>
+
+<h3>Model: Random Forest Classifier</h3>
+<ul>
+  <li>100 decision trees, each trained on a random subset of data and features.</li>
+  <li><code>class_weight="balanced"</code> — compensates for unequal class sizes (few poor metabolizer examples vs. many normal).</li>
+  <li>Prediction = majority vote of all 100 trees.</li>
+  <li>Confidence = fraction of trees that agreed on the winning class.</li>
+</ul>
+
+<h3>Evaluation Results</h3>
+<table>
+<tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Train Accuracy</td><td>~0.980</td></tr>
+<tr><td>Test Accuracy</td><td>~0.857</td></tr>
+<tr><td>5-Fold CV Accuracy</td><td>~0.830 ± 0.04</td></tr>
+</table>
+
+<div class="box yellow">
+<strong>Why is test accuracy lower than train accuracy?</strong><br>
+Random Forests memorize training data well (hence ~98% train accuracy). Test accuracy (~86%) is the honest measure — the model sees 21 new examples it has never trained on. 5-fold cross-validation gives the most reliable estimate across all splits.
+</div>
+
+<!-- ─── SECTION 6 ─────────────────────────────────── -->
+<h2>6. SHAP – Why Did the Model Predict That?</h2>
+
+<p>
+<strong>SHAP (SHapley Additive exPlanations)</strong> explains each individual prediction by showing how much each feature pushed the prediction toward or away from a class.
+</p>
+
+<div class="box">
+<strong>Example SHAP output for CYP2D6*4/*4 (Codeine):</strong><br><br>
+Feature <code>act_sum = 0.0</code> → pushes strongly toward <em>Poor Metabolizer</em> (+0.41)<br>
+Feature <code>has_*4 = 1</code> → pushes toward <em>Poor Metabolizer</em> (+0.23)<br>
+Feature <code>drug_codeine = 1</code> → small contribution (+0.05)
+</div>
+
+<p>This gives the user (and clinician) a human-readable explanation of why the model made its prediction, not just a black-box answer.</p>
+
+<!-- ─── SECTION 7 ─────────────────────────────────── -->
+<div class="pagebreak"></div>
+<h2>7. The <code>predict_metabolizer()</code> API</h2>
+
+<p>This is the core function exposed to the frontend. It takes three inputs and returns a full prediction object.</p>
+
+<h3>Input Parameters</h3>
+<table>
+<tr><th>Parameter</th><th>Type</th><th>Example</th><th>Notes</th></tr>
+<tr><td><code>gene</code></td><td>string</td><td><code>"CYP2D6"</code></td><td>Must be exactly <code>"CYP2D6"</code> or <code>"CYP2C19"</code></td></tr>
+<tr><td><code>variant</code></td><td>string</td><td><code>"*4/*1"</code></td><td>Diplotype in <code>*A/*B</code> format</td></tr>
+<tr><td><code>drug</code></td><td>string</td><td><code>"codeine"</code></td><td>Lowercase drug name (see valid list below)</td></tr>
+</table>
+
+<h3>Output (Python dict → JSON)</h3>
+<pre>
+{
+  <span class="key">"prediction"</span>:     <span class="str">"poor metabolizer"</span>,
+  <span class="key">"confidence"</span>:     <span class="val">0.92</span>,
+  <span class="key">"probabilities"</span>: {
+    <span class="str">"poor metabolizer"</span>:        <span class="val">0.92</span>,
+    <span class="str">"intermediate metabolizer"</span>: <span class="val">0.05</span>,
+    <span class="str">"normal metabolizer"</span>:       <span class="val">0.03</span>,
+    <span class="str">"ultrarapid metabolizer"</span>:   <span class="val">0.00</span>
+  },
+  <span class="key">"activity_sum"</span>:   <span class="val">0.0</span>,
+  <span class="key">"alleles"</span>:        [<span class="str">"*4"</span>, <span class="str">"*1"</span>]
+}
+</pre>
+
+<h3>Field Descriptions</h3>
+<table>
+<tr><th>Field</th><th>Meaning</th></tr>
+<tr><td><code>prediction</code></td><td>The top predicted metabolizer class (one of four possible values)</td></tr>
+<tr><td><code>confidence</code></td><td>Fraction of Random Forest trees that agreed (0.0–1.0)</td></tr>
+<tr><td><code>probabilities</code></td><td>Probability for each of the four classes (all sum to 1.0)</td></tr>
+<tr><td><code>activity_sum</code></td><td>Numeric activity score total (biological basis of prediction)</td></tr>
+<tr><td><code>alleles</code></td><td>The two parsed alleles from the variant string</td></tr>
+</table>
+
+<h3>Valid Metabolizer Classes (4 categories)</h3>
+<ul>
+  <li><span class="pill poor">poor metabolizer</span> — drug accumulates; risk of toxicity</li>
+  <li><span class="pill inter">intermediate metabolizer</span> — slower than normal; may need dose adjustment</li>
+  <li><span class="pill normal">normal metabolizer</span> — standard dosing applies</li>
+  <li><span class="pill ultra">ultrarapid metabolizer</span> — drug clears too fast; may need higher dose or alternative</li>
+</ul>
+
+<!-- ─── SECTION 8 ─────────────────────────────────── -->
+<h2>8. Saved Model Files</h2>
+
+<table>
+<tr><th>File</th><th>Purpose</th></tr>
+<tr><td><code>cleaned_data.csv</code></td><td>106-row labeled training dataset</td></tr>
+<tr><td><code>model_pipeline.pkl</code></td><td>Serialized model bundle (load with joblib)</td></tr>
+</table>
+
+<h3>How to Load and Use the Model (Python)</h3>
+<pre>
+import joblib
+bundle = joblib.load(<span class="str">"model_pipeline.pkl"</span>)
+
+<span class="key"># bundle contains:</span>
+<span class="val">model</span>        = bundle[<span class="str">"model"</span>]        <span class="key"># RandomForestClassifier</span>
+<span class="val">feature_cols</span> = bundle[<span class="str">"feature_cols"</span>] <span class="key"># list of column names</span>
+<span class="val">top_alleles</span>  = bundle[<span class="str">"top_alleles"</span>]  <span class="key"># alleles the model knows</span>
+<span class="val">top_drugs</span>    = bundle[<span class="str">"top_drugs"</span>]    <span class="key"># drugs the model knows</span>
+<span class="val">drug_columns</span> = bundle[<span class="str">"drug_columns"</span>] <span class="key"># one-hot drug column names</span>
+</pre>
+
+<!-- ─── SECTION 9 ─────────────────────────────────── -->
+<div class="pagebreak"></div>
+<h2>9. For the Frontend Teammate</h2>
+
+<div class="box green">
+<strong>What your frontend sends → what it gets back.</strong>
+</div>
+
+<h3>API Endpoint (Flask example)</h3>
+<pre>
+POST /predict
+Content-Type: application/json
+
+{
+  <span class="str">"gene"</span>:    <span class="str">"CYP2D6"</span>,
+  <span class="str">"variant"</span>: <span class="str">"*4/*1"</span>,
+  <span class="str">"drug"</span>:    <span class="str">"codeine"</span>
+}
+</pre>
+
+<h3>Response JSON</h3>
+<pre>
+{
+  <span class="key">"prediction"</span>:     <span class="str">"poor metabolizer"</span>,
+  <span class="key">"confidence"</span>:     <span class="val">0.92</span>,
+  <span class="key">"probabilities"</span>: {
+    <span class="str">"poor metabolizer"</span>:        <span class="val">0.92</span>,
+    <span class="str">"intermediate metabolizer"</span>: <span class="val">0.05</span>,
+    <span class="str">"normal metabolizer"</span>:       <span class="val">0.03</span>,
+    <span class="str">"ultrarapid metabolizer"</span>:   <span class="val">0.00</span>
+  },
+  <span class="key">"activity_sum"</span>:   <span class="val">0.0</span>,
+  <span class="key">"alleles"</span>:        [<span class="str">"*4"</span>, <span class="str">"*1"</span>]
+}
+</pre>
+
+<h3>Suggested UI Color Coding</h3>
+<table>
+<tr><th>Prediction Value</th><th>Suggested Color</th><th>Hex</th></tr>
+<tr><td>poor metabolizer</td><td style="color:#e74c3c">Red</td><td><code>#e74c3c</code></td></tr>
+<tr><td>intermediate metabolizer</td><td style="color:#e67e22">Orange</td><td><code>#e67e22</code></td></tr>
+<tr><td>normal metabolizer</td><td style="color:#27ae60">Green</td><td><code>#27ae60</code></td></tr>
+<tr><td>ultrarapid metabolizer</td><td style="color:#2980b9">Blue</td><td><code>#2980b9</code></td></tr>
+</table>
+
+<h3>Valid Gene Values</h3>
+<p><code>"CYP2D6"</code> or <code>"CYP2C19"</code> (case-sensitive)</p>
+
+<h3>Valid Variant Format</h3>
+<p>
+Must be a diplotype string in the format <code>*NUMBER/*NUMBER</code>, e.g. <code>*1/*1</code>, <code>*4/*2</code>, <code>*1x2/*1</code> (gene duplication).<br>
+Unknown alleles default to activity score 0.5 (reduced function assumed).
+</p>
+
+<h3>Common Valid Drug Names</h3>
+<p>
+All lowercase. Examples from the training data:
+</p>
+<p style="font-family: monospace; font-size: 12px; line-height: 2;">
+codeine &nbsp;|&nbsp; tramadol &nbsp;|&nbsp; tamoxifen &nbsp;|&nbsp; clopidogrel &nbsp;|&nbsp; omeprazole &nbsp;|&nbsp;
+fluoxetine &nbsp;|&nbsp; paroxetine &nbsp;|&nbsp; sertraline &nbsp;|&nbsp; risperidone &nbsp;|&nbsp; haloperidol &nbsp;|&nbsp;
+warfarin &nbsp;|&nbsp; venlafaxine &nbsp;|&nbsp; metoprolol &nbsp;|&nbsp; amitriptyline &nbsp;|&nbsp; nortriptyline
+</p>
+
+<div class="box yellow">
+<strong>Edge case:</strong> If the frontend sends a drug not in the training data, the model will still run — the drug's one-hot column will be all zeros. The prediction will be driven entirely by the activity score and allele features. This is acceptable behavior.
+</div>
+
+<h3>Display Recommendations</h3>
+<ul>
+  <li>Show <code>prediction</code> as the main result (large text, colored by class).</li>
+  <li>Show <code>confidence</code> as a percentage (e.g., 92%).</li>
+  <li>Show <code>probabilities</code> as a horizontal bar chart or progress bars for all four classes.</li>
+  <li>Show <code>activity_sum</code> with a tooltip explaining what it means.</li>
+  <li>Optionally show <code>alleles</code> to confirm what the backend parsed.</li>
+</ul>
+
+<!-- ─── SECTION 10 ─────────────────────────────────── -->
+<div class="pagebreak"></div>
+<h2>10. Project Files Overview</h2>
+
+<table>
+<tr><th>File / Folder</th><th>Purpose</th></tr>
+<tr><td><code>ml_pipeline.py</code></td><td>Full standalone Python script — data cleaning, training, prediction, SHAP</td></tr>
+<tr><td><code>pharmacogenomics_ml.ipynb</code></td><td>Jupyter notebook version with all outputs, charts, and SHAP visualizations</td></tr>
+<tr><td><code>cleaned_data.csv</code></td><td>106-row deduplicated labeled training data</td></tr>
+<tr><td><code>model_pipeline.pkl</code></td><td>Serialized trained model (load with <code>joblib.load()</code>)</td></tr>
+<tr><td><code>Dataset/variantAnnotations/var_drug_ann.tsv</code></td><td>Primary raw PharmGKB data (12,852 rows)</td></tr>
+<tr><td><code>Dataset/clinicalVariants/clinicalVariants.tsv</code></td><td>Secondary reference data (not used in final model)</td></tr>
+<tr><td><code>Dataset/relationships/relationships.tsv</code></td><td>Gene–drug relationship pairs (not used in final model)</td></tr>
+</table>
+
+<h2>11. Quick Q&amp;A Reference</h2>
+
+<dl>
+  <dt><strong>Q: What does this tool predict?</strong></dt>
+  <dd>Whether a patient is a poor, intermediate, normal, or ultrarapid metabolizer of a drug based on their CYP2D6 or CYP2C19 genetic variant.</dd>
+
+  <dt><strong>Q: What machine learning model is used?</strong></dt>
+  <dd>A Random Forest Classifier with 100 trees, balanced class weights, trained on 106 curated diplotype-drug-label examples.</dd>
+
+  <dt><strong>Q: How accurate is it?</strong></dt>
+  <dd>~86% on the held-out test set, ~83% on 5-fold cross-validation. Train accuracy is ~98% (the model memorizes training data well).</dd>
+
+  <dt><strong>Q: Why is the training set only 106 rows?</strong></dt>
+  <dd>Clinical pharmacogenomics data is sparse — only CYP2D6 and CYP2C19 rows with specific metabolizer labels were usable. 186 raw rows were expanded by sentence parsing into 691 pairs, then deduplicated down to 106 unique diplotype-drug combinations.</dd>
+
+  <dt><strong>Q: What is SHAP?</strong></dt>
+  <dd>SHapley Additive exPlanations — a method that shows how much each feature (activity score, alleles, drug) contributed to a specific prediction.</dd>
+
+  <dt><strong>Q: What is the most important feature?</strong></dt>
+  <dd>The activity sum (<code>act_sum</code>) — the numeric total of both alleles' activity scores. It encodes the biology directly and is the top feature by importance.</dd>
+
+  <dt><strong>Q: Can the tool handle unknown alleles?</strong></dt>
+  <dd>Yes. If an allele is not in the lookup table, the model defaults to 0.5 (reduced function). The prediction is still made but with lower confidence.</dd>
+</dl>
+
+<div class="footer">
+  Pharmacogenomics ML Teaching Tool &nbsp;|&nbsp; CS 171 SJSU Fall 2025 &nbsp;|&nbsp;
+  Data: PharmGKB / ClinPGx (var_drug_ann.tsv) &nbsp;|&nbsp;
+  To save as PDF: File → Print → Save as PDF (or Cmd+P on Mac)
+</div>
+
+</body>
+</html>
