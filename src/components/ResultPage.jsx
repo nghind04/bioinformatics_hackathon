@@ -20,11 +20,6 @@ export default function ResultPage({ result, onNavigate }) {
                         <div style={style.col}>
                             <span style={style.colHeader}>Gene</span>
                             <span style={style.colValue}>{result.gene}</span>
-                        </div> 
-
-                        <div style={style.col}>
-                            <span style={style.colHeader}>Variant</span>
-                            <span style={style.colValue}>{result.variant}</span>
                         </div>
 
                         <div style={style.col}>

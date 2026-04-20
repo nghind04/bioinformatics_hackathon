@@ -22,13 +22,6 @@ export default function ResultDetails({ result }) {
             </div>
 
             <div style={styles.summaryItem}>
-              <span style={styles.summaryLabel}>Variant</span>
-              <span style={{ ...styles.summaryValue, fontFamily: 'var(--font-mono)' }}>
-                {result.variant}
-              </span>
-            </div>
-
-            <div style={styles.summaryItem}>
               <span style={styles.summaryLabel}>Allele</span>
               <span style={{ ...styles.summaryValue, fontFamily: 'var(--font-mono)' }}>
                 {result.allele}

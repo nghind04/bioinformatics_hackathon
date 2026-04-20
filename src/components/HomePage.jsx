@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { GENES } from "../data/testHomePage"
-import { VARIANTS } from "../data/testHomePage"
 import { MEDICATIONS } from "../data/testHomePage"
 import { ALLELE_OPTIONS } from "../data/testHomePage"
 import { SAMPLE } from "../data/testHomePage"
@@ -18,7 +17,6 @@ export default function HomePage({ onGenerate, showNoti}){
         setForm(prev => ({
             ...prev,
             gene: value,
-            variant: '',
             medication: '',
             allele1: '',
             allele2: '',
@@ -26,12 +24,10 @@ export default function HomePage({ onGenerate, showNoti}){
     }
 
     const inputGene = form.geneManual.trim() || form.gene
-    const inputVariant = form.variantManual.trim() || form.variant 
     const inputMedication = form.medicationManual.trim() || form.medication
     const inputAllele1 = form.allele1Manual.trim() || form.allele1
     const inputAllele2 = form.allele2Manual.trim() || form.allele2
 
-    const variantOptions = VARIANTS[form.gene] || []
     const medicationOptions = MEDICATIONS[form.gene] || []
     const alleleOptions = ALLELE_OPTIONS.map(a => a.value)
 
@@ -51,11 +47,6 @@ export default function HomePage({ onGenerate, showNoti}){
             return
         }
 
-        if (!inputVariant) {
-            showNoti('Please select or enter a Variant!', 'error');
-            return
-        }
-
         if (!inputMedication) {
             showNoti('Please select or enter a Medication!', 'error');
             return
@@ -65,6 +56,7 @@ export default function HomePage({ onGenerate, showNoti}){
             showNoti('Please select or enter Allele 1!', 'error');
             return
         }
+
 
         if (!inputAllele2) {
             showNoti('Please select or enter Allele 2!', 'error');
@@ -101,25 +93,6 @@ export default function HomePage({ onGenerate, showNoti}){
                             style={style.inputField}
                             value={form.geneManual}
                             onChange={e => setField('geneManual', e.target.value)} />
-
-
-                        {/* Variant input */}
-                        <label style={style.label}>Variant:</label>
-                        <select style={style.select} value={form.variant} onChange={e => setField('variant', e.target.value)}>
-                            <option value="">-- Select a Variant --</option>
-                            {variantOptions.map(v => (
-                                <option key={v} value={v}>{v}</option>
-                            ))}
-                        </select>
-
-                        <div style={style.divider}>------or type manually------</div>
-
-                        <input 
-                            type="text" 
-                            placeholder="Enter a Variant" 
-                            style={style.inputField}
-                            value={form.variantManual}
-                            onChange={e => setField('variantManual', e.target.value)} />
 
 
                         {/* Medicine Input */}
