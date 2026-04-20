@@ -1,11 +1,7 @@
 import { getQuiz } from '../data/quizBank'
 
-
-export async function analyzeGenotype(gene, variant, alleles, medication) {
-    await new Promise(resolve => setTimeout(resolve, 2500))
-}
-// Base URL of your Flask server
-const API_BASE = 'http://localhost:5000'
+// Empty string = relative URL, Vite proxies to http://localhost:5000
+const API_BASE = ''
 
 // ─── Short abbreviations for the result badge ───────────────────────────────
 const SHORT_LABEL = {

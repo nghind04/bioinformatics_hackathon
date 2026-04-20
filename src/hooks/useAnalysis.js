@@ -6,12 +6,12 @@ export function useAnalysis() {
     const[error, setError] = useState(null)
     const[result, setResult] = useState(null)
 
-    const analyze = useCallback(async (gene, variant, alleles, medication) => {
+    const analyze = useCallback(async (gene, variant, medication, alleles) => {
         setLoading(true)
         setError(null)
 
         try {
-            const data = await analyzeGenotype(gene, variant, alleles, medication)
+            const data = await analyzeGenotype(gene, variant, medication, alleles)
             const fullResult = { gene, variant, allele: alleles.join('/'), medication, ...data}
             setResult(fullResult)
             return fullResult

@@ -63,7 +63,7 @@ export default function HomePage({ onGenerate, showNoti}){
             return
         }
 
-        onGenerate(inputGene, inputVariant, [inputAllele1, inputAllele2], inputMedication)
+        onGenerate(inputGene, '', inputMedication, [inputAllele1, inputAllele2])
     }
 
     return (
