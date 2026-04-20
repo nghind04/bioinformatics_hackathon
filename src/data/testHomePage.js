@@ -24,12 +24,12 @@ export const ALLELE_OPTIONS = {
 export const SAMPLE = {
     gene:             'CYP2D6',
     geneManual:       '',
-    medication:       'Codeine',
+    medication:       'Tramadol',
     medicationManual: '',
 
-    allele1:          '*2',
+    allele1:          '*1',
     allele1Manual:    '',
-    allele2:          '*2',
+    allele2:          '*4',
     allele2Manual:    '',
 
 }
