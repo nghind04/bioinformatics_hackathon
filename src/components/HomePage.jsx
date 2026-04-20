@@ -29,7 +29,7 @@ export default function HomePage({ onGenerate, showNoti}){
     const inputAllele2 = form.allele2Manual.trim() || form.allele2
 
     const medicationOptions = MEDICATIONS[form.gene] || []
-    const alleleOptions = ALLELE_OPTIONS.map(a => a.value)
+    const alleleOptions = ALLELE_OPTIONS[form.gene] || []
 
     function handleSample(){
         setForm(SAMPLE)
@@ -61,6 +61,30 @@ export default function HomePage({ onGenerate, showNoti}){
         if (!inputAllele2) {
             showNoti('Please select or enter Allele 2!', 'error');
             return
+        }
+
+        // Validate input medicine
+        const validMedicine = MEDICATIONS[inputGene] || []
+        if (!validMedicine.includes(inputMedication)) {
+            showNoti('Invalid medicine. Please choose another one!', 'error');
+            setField('medicationManual', '');
+            setField('medication', '');
+            return
+        }
+
+        // Validate input alleles
+        const validAlleles = ALLELE_OPTIONS[inputGene] || []
+        if (!validAlleles.includes(inputAllele1)) {
+            showNoti('Invalid allele 1. Please choose another one!', 'error');
+            setField('allele1Manual', '');
+            setField('allele1', '');
+            return
+        }
+        if (!validAlleles.includes(inputAllele2)) {
+                showNoti('Invalid allele 2. Please choose another one!', 'error');
+                setField('allele2Manual', '');
+                setField('allele2', '');
+                return
         }
 
         onGenerate(inputGene, '', inputMedication, [inputAllele1, inputAllele2])
