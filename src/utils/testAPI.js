@@ -1,6 +1,6 @@
 import { getQuiz } from '../data/quizBank'
 
-// Empty string = relative URL, Vite proxies to http://localhost:5000
+// Empty string = relative URL, Vite proxies to http://127.0.0.1:5000
 const API_BASE = ''
 
 // ─── Short abbreviations for the result badge ───────────────────────────────

@@ -5,11 +5,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    allowedHosts: 'all',
     proxy: {
-      '/predict': { target: 'http://localhost:5000', changeOrigin: true },
-      '/options': { target: 'http://localhost:5000', changeOrigin: true },
-      '/samples': { target: 'http://localhost:5000', changeOrigin: true },
-      '/health':  { target: 'http://localhost:5000', changeOrigin: true },
+      '/predict': { target: 'http://127.0.0.1:5000', changeOrigin: true },
+      '/options': { target: 'http://127.0.0.1:5000', changeOrigin: true },
+      '/samples': { target: 'http://127.0.0.1:5000', changeOrigin: true },
+      '/health':  { target: 'http://127.0.0.1:5000', changeOrigin: true },
     }
   }
 })

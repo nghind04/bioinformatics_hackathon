@@ -22,6 +22,7 @@ import re
 import joblib
 import pandas as pd
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 # ---------------------------------------------------------------------------
 # Boot – load the trained model bundle saved by ml_pipeline.py
@@ -161,23 +162,7 @@ def predict_metabolizer(gene: str, variant: str, drug: str) -> dict:
 # Flask app
 # ---------------------------------------------------------------------------
 app = Flask(__name__)
-
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        res = app.make_response("")
-        res.headers["Access-Control-Allow-Origin"]  = "*"
-        res.headers["Access-Control-Allow-Headers"] = "Content-Type"
-        res.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-        res.status_code = 204
-        return res
-
-@app.after_request
-def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Origin"]  = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-    return response
+CORS(app)
 
 
 @app.route("/health", methods=["GET"])
