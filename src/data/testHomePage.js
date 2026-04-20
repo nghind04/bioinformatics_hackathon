@@ -21,8 +21,9 @@ export const MEDICATIONS = {
 export const ALLELE_OPTIONS = [
     { value: '*1', label: '*1 (normal)' },
     { value: '*2', label: '*2' },
-    { value: '*3', label: '*3' },
-    { value: '*4', label: '*4 (non-functional)' },
+    { value: '*33', label: '*33' },
+    { value: '*35', label: '*35' }, 
+    { value: '*39', label: '*39' },
 ]
  
 // Sample data for the Load Samples button
@@ -33,7 +34,10 @@ export const SAMPLE = {
     variantManual:    '',
     medication:       'Codeine',
     medicationManual: '',
-    alleles:          ['*2'],
+    allele1:          '*2',
+    allele1Manual:    '',
+    allele2:          '*2',
+    allele2Manual:    '',
 }
  
 export const EMPTY = {
@@ -43,5 +47,8 @@ export const EMPTY = {
     variantManual:    '',
     medication:       '',
     medicationManual: '',
-    alleles:          [],
+    allele1:          '',
+    allele1Manual:    '',
+    allele2:          '',
+    allele2Manual:    '',
 }

@@ -60,13 +60,14 @@ export default function ResultDetails({ result }) {
   )
 }
 
-// ── Styles ────────────────────────────────────
+// Styles
 const styles = {
   page: {
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
     background: "var(--bg-color)",
+    alignItems: "flex-start",
   },
   content: {
     flex: 1,
@@ -84,7 +85,7 @@ const styles = {
   metHeader: {
     background: 'linear-gradient(135deg, #0d2044 0%, #112254 100%)',
     borderRadius: 10,
-    padding: '20px 28px',
+    padding: '16px 28px',
     animation: 'fadein 0.35s ease',
   },
   metTitle: {
@@ -107,7 +108,6 @@ const styles = {
   // Input summary card
   summaryCard: {
     padding: '20px 24px',
-
   },
   summaryTitle: {
     fontFamily: 'var(--font-display)',
@@ -120,7 +120,7 @@ const styles = {
   },
   summaryGrid: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',  // ← 2 columns
+    gridTemplateColumns: '1fr 1fr',  
     gap: '14px 32px',
   },
   summaryItem: {

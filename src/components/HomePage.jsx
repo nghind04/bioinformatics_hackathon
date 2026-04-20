@@ -20,24 +20,20 @@ export default function HomePage({ onGenerate, showNoti}){
             gene: value,
             variant: '',
             medication: '',
-        }))
-    }
-
-    function toggleAllele(value) {
-        setForm(prev => ({
-            ...prev,
-            alleles: prev.alleles.includes(value) ? 
-                prev.alleles.filter(a => a !== value) : 
-                [...prev.alleles, value],
+            allele1: '',
+            allele2: '',
         }))
     }
 
     const inputGene = form.geneManual.trim() || form.gene
     const inputVariant = form.variantManual.trim() || form.variant 
     const inputMedication = form.medicationManual.trim() || form.medication
+    const inputAllele1 = form.allele1Manual.trim() || form.allele1
+    const inputAllele2 = form.allele2Manual.trim() || form.allele2
 
     const variantOptions = VARIANTS[form.gene] || []
     const medicationOptions = MEDICATIONS[form.gene] || []
+    const alleleOptions = ALLELE_OPTIONS.map(a => a.value)
 
     function handleSample(){
         setForm(SAMPLE)
@@ -65,12 +61,17 @@ export default function HomePage({ onGenerate, showNoti}){
             return
         }
 
-        if (!form.alleles.length) {
-            showNoti('Please select one Allele!', 'error');
+        if (!inputAllele1) {
+            showNoti('Please select or enter Allele 1!', 'error');
             return
         }
 
-        onGenerate(inputGene, inputVariant, inputMedication, form.alleles)
+        if (!inputAllele2) {
+            showNoti('Please select or enter Allele 2!', 'error');
+            return
+        }
+
+        onGenerate(inputGene, inputVariant, [inputAllele1, inputAllele2], inputMedication)
     }
 
     return (
@@ -132,27 +133,46 @@ export default function HomePage({ onGenerate, showNoti}){
                         <div style={style.divider}>------or type manually------</div>
                         <input 
                             type="text" 
-                            placeholder="Enter a Gene" 
+                            placeholder="Enter a Medicine" 
                             style={style.inputField}
                             value={form.medicationManual}
                             onChange={e => setField('medicationManual', e.target.value)}  />
 
                         {/* Allele selection */}
-                        <label style={style.label}>Allele:</label>
-                        <div style={style.alleleField}>
-                            {ALLELE_OPTIONS.map(({ value, label }) => {
-                                const isChecked = form.alleles.includes(value)
-                                return (
-                                    <label 
-                                        key={value} 
-                                        style={style.alleleLabel}
-                                        onClick={() => toggleAllele(value)} >
-                                            <span style={isChecked ? style.checked : style.unchecked} />
-                                            {label}
-                                    </label>
-                                )
-                            })}
-                        </div>
+                        <label style={style.label}>Allele 1:</label>
+                        <select style={style.select} value={form.allele1} onChange={e => setField('allele1', e.target.value)}>
+                                <option value="">-- Select Allele 1 --</option>
+                                {alleleOptions.map(a => (
+                                    <option key={a} value={a}>{a}</option>
+                                ))}
+                            </select>
+
+                            <div style={style.divider}>------or type manually------</div>
+
+                            <input 
+                                type="text" 
+                                placeholder="Enter Allele 1" 
+                                style={style.inputField}
+                                value={form.allele1Manual}
+                                onChange={e => setField('allele1Manual', e.target.value)} />
+
+                        <label style={style.label}>Allele 2:</label>
+                        <select style={style.select} value={form.allele2} onChange={e => setField('allele2', e.target.value)}>
+                                <option value="">-- Select Allele 2 --</option>
+                                {alleleOptions.map(a => (
+                                    <option key={a} value={a}>{a}</option>
+                                ))}
+                            </select>
+
+                            <div style={style.divider}>------or type manually------</div>
+
+                            <input 
+                                type="text" 
+                                placeholder="Enter Allele 2" 
+                                style={style.inputField}
+                                value={form.allele2Manual}
+                                onChange={e => setField('allele2Manual', e.target.value)} />
+    
                     </div>
 
                     <div style={style.btnRow}> 
