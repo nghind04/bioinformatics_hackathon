@@ -1,4 +1,4 @@
-# PHARMEGENE
+# PHARMAGENE
 ### Project Objective
 We all experience the same drug working perfectly for one person while causing side effects or do nothing for another. The answer is because of genetics. This project analyzes how certain genes metabolize the drug in the body and provides a teaching tool using machine learning for students through quizzes to learn how they can prescribe the right drug to various people.
 
