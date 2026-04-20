@@ -1,4 +1,4 @@
-# PHARMEGENE
+# PHARMAGENE
 ### Project Objective
 We all experience the same drug working perfectly for one person while causing side effects or do nothing for another. The answer is because of genetics. This project analyzes how certain genes metabolize the drug in the body and provides a teaching tool using machine learning for students through quizzes to learn how they can prescribe the right drug to various people.
 
@@ -24,7 +24,7 @@ For each prediction, the result provides:
 | Frontend | React, Vite |
 | Backend / ML API | Python, Flask, flask-cors |
 | ML Model | scikit-learn RandomForestClassifier |
-| Data | PharmGKB ClinPGx 'clinicalVariants.tsv', 'relationshups.tsv', 'var_drug_ann.tsv'|
+| Data | PharmGKB ClinPGx `var_drug_ann.tsv` to `cleaned_data.csv`|
 |Model serialization | joblib |
 
 ### How to run the project
