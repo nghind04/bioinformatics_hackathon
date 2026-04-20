@@ -1,9 +1,7 @@
 import { getQuiz } from '../data/quizBank'
 
-// Empty string = relative URL, Vite proxies to http://127.0.0.1:5000
 const API_BASE = ''
 
-// ─── Short abbreviations for the result badge ───────────────────────────────
 const SHORT_LABEL = {
     poor:         'PM',
     intermediate: 'IM',
@@ -11,7 +9,6 @@ const SHORT_LABEL = {
     ultrarapid:   'UM',
 }
 
-// ─── Clinical recommendations per gene + metabolizer type ───────────────────
 const RECOMMENDATION = {
     CYP2D6: {
         poor:
@@ -35,7 +32,6 @@ const RECOMMENDATION = {
     },
 }
 
-// ─── Biological mechanism explanation per gene + metabolizer type ────────────
 const MECHANISM = {
     CYP2D6: {
         poor:
@@ -59,10 +55,8 @@ const MECHANISM = {
     },
 }
 
-// ─── Main function ───────────────────────────────────────────────────────────
 export async function analyzeGenotype(gene, variant, medication, alleles) {
 
-    // Combine the two selected alleles into diplotype format for the API
     const diplotype = alleles.length >= 2 ? alleles.join('/') : '*1/*4'
 
     const response = await fetch(`${API_BASE}/predict`, {
@@ -70,8 +64,8 @@ export async function analyzeGenotype(gene, variant, medication, alleles) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             gene:    gene,
-            variant: diplotype,   // "*A/*B" — NOT the rs number
-            drug:    medication,  // API expects "drug", not "medication"
+            variant: diplotype,
+            drug:    medication,
         }),
     })
 
@@ -82,25 +76,19 @@ export async function analyzeGenotype(gene, variant, medication, alleles) {
 
     const data = await response.json()
 
-    // data.prediction is the raw class: "poor" | "intermediate" | "normal" | "ultrarapid"
     const pred    = data.prediction
     const geneKey = gene.toUpperCase()
 
-
     return {
-        // Fields that ResultPage and ResultDetails read directly
         metabolizerType:      data.prediction_label,
         metabolizerTypeShort: SHORT_LABEL[pred] ?? pred.toUpperCase(),
         recommendation:       RECOMMENDATION[geneKey]?.[pred] ?? '',
         mechanism:            MECHANISM[geneKey]?.[pred] ?? '',
-
-        // Quiz — selected based on what the model predicted
         quiz: getQuiz(gene, pred, medication),
-
-        // Extra fields from API (available for future UI use)
-        color:        data.color,
-        confidence:   data.confidence,
-        probabilities: data.probabilities,
-        activity_sum: data.activity_sum,
+        color:            data.color,
+        confidence:       data.confidence,
+        probabilities:    data.probabilities,
+        activity_sum:     data.activity_sum,
+        in_training_data: data.in_training_data,
     }
 }

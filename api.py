@@ -1,43 +1,19 @@
-"""
-PHARMAGENE – Flask REST API
-Serves the pharmacogenomics ML model to the frontend.
-
-Endpoints:
-    GET  /health        health check
-    GET  /options       gene list, allele list, drug list for dropdowns
-    GET  /samples       4 pre-built example inputs for "Load Samples" button
-    POST /predict       main prediction endpoint
-
-Run:
-    pip install flask flask-cors joblib pandas scikit-learn
-    python3 api.py
-
-The frontend (React / any HTTP client) should call:
-    POST http://localhost:5000/predict
-    Content-Type: application/json
-    { "gene": "CYP2D6", "variant": "*4/*1", "drug": "codeine" }
-"""
-
 import re
 import joblib
 import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-# ---------------------------------------------------------------------------
-# Boot – load the trained model bundle saved by ml_pipeline.py
-# ---------------------------------------------------------------------------
 BUNDLE = joblib.load("model_pipeline.pkl")
 
 clf          = BUNDLE["model"]
 feature_cols = BUNDLE["feature_cols"]
-top_alleles  = BUNDLE["top_alleles"]   # list of star alleles the model knows
-top_drugs    = BUNDLE["top_drugs"]     # list of drug names the model knows
-drug_columns = BUNDLE["drug_columns"]  # one-hot column names like "drug_codeine"
+top_alleles  = BUNDLE["top_alleles"]
+top_drugs    = BUNDLE["top_drugs"]
+drug_columns = BUNDLE["drug_columns"]
 
-# ---------------------------------------------------------------------------
-# Allele activity score tables (mirrors ml_pipeline.py exactly)
-# ---------------------------------------------------------------------------
+TRAINING_DATA = pd.read_csv("cleaned_data.csv")
+
 CYP2D6_ACTIVITY = {
     "*1": 1.0, "*2": 1.0, "*33": 1.0, "*35": 1.0, "*39": 1.0,
     "*9": 0.5, "*10": 0.5, "*17": 0.5, "*29": 0.5, "*36": 0.5,
@@ -64,15 +40,13 @@ GENE_ACTIVITY = {
     "CYP2C19": CYP2C19_ACTIVITY,
 }
 
-# Metabolizer class → UI color (hex) for the frontend
 CLASS_COLORS = {
-    "poor":         "#e74c3c",   # red
-    "intermediate": "#e67e22",   # orange
-    "normal":       "#27ae60",   # green
-    "ultrarapid":   "#2980b9",   # blue
+    "poor":         "#e74c3c",
+    "intermediate": "#e67e22",
+    "normal":       "#27ae60",
+    "ultrarapid":   "#2980b9",
 }
 
-# Human-readable label for display
 CLASS_LABELS = {
     "poor":         "Poor Metabolizer",
     "intermediate": "Intermediate Metabolizer",
@@ -80,17 +54,12 @@ CLASS_LABELS = {
     "ultrarapid":   "Ultrarapid Metabolizer",
 }
 
-# ---------------------------------------------------------------------------
-# Helper – look up activity score for one allele
-# ---------------------------------------------------------------------------
+
 def get_activity(gene: str, allele: str):
     table = GENE_ACTIVITY.get(gene.upper(), {})
     return table.get(allele.lower())
 
 
-# ---------------------------------------------------------------------------
-# Helper – build the feature row the model expects
-# ---------------------------------------------------------------------------
 def build_input_row(gene: str, variant: str, drug: str) -> pd.DataFrame:
     alleles = re.findall(r"\*[\w]+", str(variant))
     allele1 = alleles[0].lower() if len(alleles) > 0 else "*1"
@@ -99,7 +68,7 @@ def build_input_row(gene: str, variant: str, drug: str) -> pd.DataFrame:
     g = gene.upper()
     act1 = get_activity(g, allele1)
     act2 = get_activity(g, allele2)
-    if act1 is None: act1 = 0.5   # unknown allele → conservative fallback
+    if act1 is None: act1 = 0.5
     if act2 is None: act2 = 0.5
 
     drug_clean = drug.strip().lower()
@@ -129,9 +98,6 @@ def build_input_row(gene: str, variant: str, drug: str) -> pd.DataFrame:
     return pd.DataFrame([row]).reindex(columns=feature_cols, fill_value=0)
 
 
-# ---------------------------------------------------------------------------
-# Core prediction function
-# ---------------------------------------------------------------------------
 def predict_metabolizer(gene: str, variant: str, drug: str) -> dict:
     alleles = re.findall(r"\*[\w]+", str(variant))
     allele1 = alleles[0].lower() if len(alleles) > 0 else "*1"
@@ -143,41 +109,42 @@ def predict_metabolizer(gene: str, variant: str, drug: str) -> dict:
     if act2 is None: act2 = 0.5
 
     row   = build_input_row(gene, variant, drug)
-    pred  = clf.predict(row)[0]                    # e.g. "poor"
+    pred  = clf.predict(row)[0]
     proba = clf.predict_proba(row)[0]
     proba_dict = dict(zip(clf.classes_, proba))
 
+    drug_clean = drug.strip().lower()
+    match = TRAINING_DATA[
+        (TRAINING_DATA["gene"]    == gene.upper()) &
+        (TRAINING_DATA["allele1"] == allele1) &
+        (TRAINING_DATA["allele2"] == allele2) &
+        (TRAINING_DATA["drug"].str.lower().str.contains(drug_clean, na=False))
+    ]
+    in_training_data = len(match) > 0
+
     return {
-        "prediction":     pred,                                    # "poor" / "intermediate" / "normal" / "ultrarapid"
-        "prediction_label": CLASS_LABELS.get(pred, pred),         # "Poor Metabolizer"
-        "color":          CLASS_COLORS.get(pred, "#888888"),       # hex color for UI
-        "confidence":     round(float(max(proba)), 3),             # 0.0 – 1.0
-        "probabilities":  {k: round(float(v), 3) for k, v in proba_dict.items()},
-        "activity_sum":   round(act1 + act2, 2),
-        "alleles":        [allele1, allele2],
+        "prediction":       pred,
+        "prediction_label": CLASS_LABELS.get(pred, pred),
+        "color":            CLASS_COLORS.get(pred, "#888888"),
+        "confidence":       round(float(max(proba)), 3),
+        "probabilities":    {k: round(float(v), 3) for k, v in proba_dict.items()},
+        "activity_sum":     round(act1 + act2, 2),
+        "alleles":          [allele1, allele2],
+        "in_training_data": in_training_data,
     }
 
 
-# ---------------------------------------------------------------------------
-# Flask app
-# ---------------------------------------------------------------------------
 app = Flask(__name__)
 CORS(app)
 
 
 @app.route("/health", methods=["GET"])
 def health():
-    """Quick check that the server is up."""
     return jsonify({"status": "ok", "model": "model_pipeline.pkl"})
 
 
 @app.route("/options", methods=["GET"])
 def options():
-    """
-    Return all valid values for each frontend dropdown/field.
-    The frontend uses this to populate Gene, Allele, and Medication inputs.
-    """
-    # Build allele list with activity score and function label for display
     def allele_info(gene, allele):
         score = get_activity(gene, allele)
         if score is None:
@@ -213,10 +180,6 @@ def options():
 
 @app.route("/samples", methods=["GET"])
 def samples():
-    """
-    Return 4 pre-built example inputs for the 'Load Samples' button.
-    Each covers a different metabolizer class so the user can explore all outcomes.
-    """
     examples = [
         {
             "label":       "Poor Metabolizer – Codeine",
@@ -259,29 +222,8 @@ def samples():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    """
-    Main prediction endpoint.
-
-    Request body (JSON):
-        { "gene": "CYP2D6", "variant": "*4/*1", "drug": "codeine" }
-
-    Response (JSON):
-        {
-            "prediction":       "poor",
-            "prediction_label": "Poor Metabolizer",
-            "color":            "#e74c3c",
-            "confidence":       0.92,
-            "probabilities": {
-                "poor": 0.92, "intermediate": 0.05,
-                "normal": 0.03, "ultrarapid": 0.00
-            },
-            "activity_sum": 0.0,
-            "alleles": ["*4", "*1"]
-        }
-    """
     data = request.get_json(silent=True)
 
-    # Validate input
     if not data:
         return jsonify({"error": "Request body must be JSON."}), 400
 
@@ -302,14 +244,5 @@ def predict():
     return jsonify(result)
 
 
-# ---------------------------------------------------------------------------
-# Run
-# ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    print("PHARMAGENE API starting on http://localhost:5000")
-    print("Endpoints:")
-    print("  GET  /health")
-    print("  GET  /options")
-    print("  GET  /samples")
-    print("  POST /predict")
     app.run(debug=True, port=5000)

@@ -60,6 +60,7 @@ const style = {
         background: "var(--bg-color)",
     },
 
+
     content: {
         flex: 1,
         display: "flex",

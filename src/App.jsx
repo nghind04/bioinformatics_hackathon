@@ -31,7 +31,12 @@ function App() {
     const analysisResult = await analyze(gene, variant, medication, alleles)
 
     if (analysisResult){
-      setPage('result')
+      if (analysisResult.in_training_data === false) {
+        setPage('home')
+        showNoti('This combination was not found in the training data. No result available.', 'error')
+      } else {
+        setPage('result')
+      }
     } else {
       setPage('home')
       showNoti(error || 'Try again', 'error')

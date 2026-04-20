@@ -3,24 +3,31 @@ import { useEffect } from "react"
 export default function Notification({msg, type = "info", onClose}) {
 
     useEffect(() => {
-        if (!msg || type !== "info") return 
-
-        const timer = setTimeout(onClose, 3000)
+        if (!msg) return
+        const duration = type === 'warning' ? 6000 : type === 'info' ? 3000 : null
+        if (!duration) return
+        const timer = setTimeout(onClose, duration)
         return () => clearTimeout(timer)
     }, [msg, type, onClose]);
 
     if (!msg) return null;
+
+    const bgColor  = type === 'error'   ? 'var(--danger-light)'        :
+                     type === 'warning' ? 'rgba(230, 168, 23, 0.15)'   :
+                     'var(--purple)'
+    const bdColor  = type === 'error'   ? 'var(--danger)'              :
+                     type === 'warning' ? '#e6a817'                    :
+                     'var(--magenta)'
 
     const style = {
         noti: {
             position: "fixed",
             bottom: 20,
             right: 24,
-            background: type === 'error' ? 'var(--danger-light)' : 'var(--purple)',
-            border: `1px solid ${type === 'error' ? 'var(--danger)' : 'var(--magenta)'}`,
+            background: bgColor,
+            border: `1px solid ${bdColor}`,
             borderRadius: 10,
-
-            color: "var(--text-color)",
+            color: type === 'warning' ? '#e6a817' : 'var(--text-color)',
             padding: "12px 20px",
             fontSize: 14,
             zIndex: 1000,
