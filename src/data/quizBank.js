@@ -24,15 +24,15 @@ const QUIZ_BANK = {
 
         poor: [
             {
-                question: 'A patient is a CYP2D6 Poor Metabolizer prescribed Codeine. What is the most likely outcome?',
+                question: 'A patient is a CYP2D6 Poor Metabolizer prescribed DRUG. What is the most likely outcome?',
                 options: [
-                    'Therapeutic failure — codeine cannot be converted to active morphine',
-                    'Opioid toxicity from excessive morphine production',
-                    'Normal analgesic effect with standard dosing',
+                    'Reduced drug effect — CYP2D6 cannot properly metabolize the drug',
+                    'Toxicity from excessive active metabolite production',
+                    'Normal therapeutic effect with standard dosing',
                     'Accelerated drug clearance requiring a higher dose',
                 ],
                 correctIndex: 0,
-                explanation: 'Poor metabolizers have little or no CYP2D6 enzyme activity. Codeine must be converted to morphine by CYP2D6 to work. Without this conversion, the drug has no analgesic effect.',
+                explanation: 'Poor metabolizers have little or no CYP2D6 enzyme activity. Drugs that depend on CYP2D6 for activation will not be converted to their active form, leading to reduced efficacy.',
             },
             {
                 question: 'Why do Poor Metabolizers have reduced CYP2D6 enzyme activity?',
@@ -49,15 +49,15 @@ const QUIZ_BANK = {
 
         intermediate: [
             {
-                question: 'A CYP2D6 Intermediate Metabolizer takes Tramadol. What is expected compared to a Normal Metabolizer?',
+                question: 'A CYP2D6 Intermediate Metabolizer takes DRUG. What is expected compared to a Normal Metabolizer?',
                 options: [
                     'Faster drug clearance and reduced effect',
-                    'Slower conversion to active metabolite, leading to reduced or delayed pain relief',
+                    'Slower metabolism — drug levels may be higher or active metabolite builds up more slowly',
                     'Risk of life-threatening toxicity',
                     'No difference — dosing is identical',
                 ],
                 correctIndex: 1,
-                explanation: 'Intermediate metabolizers have one reduced-function allele and one normal or non-functional allele. Drug conversion is slower than normal, so the active metabolite builds up more slowly.',
+                explanation: 'Intermediate metabolizers have one reduced-function allele. Drug metabolism proceeds more slowly than normal, which can raise parent drug levels or slow prodrug activation.',
             },
             {
                 question: 'Which diplotype is most consistent with a CYP2D6 Intermediate Metabolizer?',
@@ -74,7 +74,7 @@ const QUIZ_BANK = {
 
         normal: [
             {
-                question: 'A CYP2D6 Normal Metabolizer is prescribed Metoprolol. What dosing approach is recommended?',
+                question: 'A CYP2D6 Normal Metabolizer is prescribed DRUG. What dosing approach is recommended?',
                 options: [
                     'Reduce the dose to avoid toxicity',
                     'Avoid the drug entirely',
@@ -99,15 +99,15 @@ const QUIZ_BANK = {
 
         ultrarapid: [
             {
-                question: 'A CYP2D6 Ultrarapid Metabolizer is prescribed Codeine. What is the primary safety concern?',
+                question: 'A CYP2D6 Ultrarapid Metabolizer is prescribed DRUG. What is the primary safety concern?',
                 options: [
                     'The drug will have no effect at all',
-                    'Codeine is converted to morphine too quickly, risking opioid toxicity',
+                    'Active metabolites are produced too quickly, risking toxicity at standard doses',
                     'The drug will accumulate and cause liver damage',
                     'Metabolism is slightly faster than normal — no clinical concern',
                 ],
                 correctIndex: 1,
-                explanation: 'Gene duplication produces excess CYP2D6 enzyme. Codeine is rapidly converted to morphine, causing dangerously high morphine levels even at standard doses — a known cause of fatal opioid toxicity.',
+                explanation: 'Gene duplication produces excess CYP2D6 enzyme. Drugs are metabolized much faster than normal — prodrugs may generate dangerously high levels of active metabolite even at standard doses.',
             },
             {
                 question: 'Which genotype causes a CYP2D6 Ultrarapid Metabolizer phenotype?',
@@ -130,40 +130,40 @@ const QUIZ_BANK = {
 
         poor: [
             {
-                question: 'A CYP2C19 Poor Metabolizer is prescribed Clopidogrel. What is the clinical concern?',
+                question: 'A CYP2C19 Poor Metabolizer is prescribed DRUG. What is the clinical concern?',
                 options: [
-                    'Clopidogrel works faster and causes bleeding',
-                    'Clopidogrel cannot be activated — the patient has reduced antiplatelet protection',
-                    'The drug is toxic because it accumulates',
-                    'No concern — Clopidogrel does not use CYP2C19',
+                    'The drug works faster and causes side effects',
+                    'Prodrugs cannot be activated, or directly-acting drugs accumulate to higher levels',
+                    'The drug is toxic because it converts to a harmful metabolite',
+                    'No concern — CYP2C19 status does not affect this drug',
                 ],
                 correctIndex: 1,
-                explanation: 'Clopidogrel is a prodrug that must be activated by CYP2C19. Poor metabolizers (*2/*2) cannot activate it, leaving platelets unblocked and increasing the risk of cardiovascular events.',
+                explanation: 'CYP2C19 Poor Metabolizers have no functional enzyme. Prodrugs requiring CYP2C19 activation will be ineffective, while drugs inactivated by CYP2C19 will accumulate to higher levels.',
             },
             {
-                question: 'A CYP2C19 Poor Metabolizer takes Omeprazole (a PPI for acid reflux). What happens?',
+                question: 'A CYP2C19 Poor Metabolizer takes DRUG. What happens to drug levels in the body?',
                 options: [
-                    'Omeprazole is cleared faster, reducing its effect',
-                    'Omeprazole accumulates, resulting in higher drug exposure and stronger acid suppression',
-                    'No change — PPIs do not depend on CYP2C19',
-                    'Omeprazole causes severe liver toxicity',
+                    'Drug is cleared faster — levels drop below therapeutic range',
+                    'Drug levels are unchanged — CYP2C19 is not involved',
+                    'Drug accumulates to higher levels due to reduced enzyme clearance',
+                    'Drug is immediately converted to a toxic form',
                 ],
-                correctIndex: 1,
-                explanation: 'Unlike Clopidogrel, Omeprazole is directly inactivated by CYP2C19. In poor metabolizers, the drug is not broken down, so it stays in the body longer and acid suppression is enhanced.',
+                correctIndex: 2,
+                explanation: 'Without CYP2C19 enzyme activity, drugs normally inactivated by this enzyme stay in the body longer. This increases exposure and can amplify both therapeutic and adverse effects.',
             },
         ],
 
         intermediate: [
             {
-                question: 'A CYP2C19 Intermediate Metabolizer is given Escitalopram (an antidepressant). What is expected?',
+                question: 'A CYP2C19 Intermediate Metabolizer is given DRUG. What is expected?',
                 options: [
                     'The drug clears too fast and has no effect',
-                    'The drug accumulates slightly more than in a Normal Metabolizer, requiring possible dose reduction',
+                    'Drug levels are slightly higher than in a Normal Metabolizer — monitor for increased effect',
                     'Normal drug levels — no adjustment needed',
                     'Severe toxicity requiring immediate discontinuation',
                 ],
                 correctIndex: 1,
-                explanation: 'Intermediate metabolizers have reduced CYP2C19 activity. Escitalopram is metabolized more slowly, leading to higher plasma levels than in Normal Metabolizers. Dose reduction may be warranted.',
+                explanation: 'Intermediate metabolizers have reduced CYP2C19 activity. Drugs metabolized by CYP2C19 are cleared more slowly, leading to higher plasma levels than in Normal Metabolizers.',
             },
             {
                 question: 'Which allele pair defines a CYP2C19 Intermediate Metabolizer?',
@@ -180,15 +180,15 @@ const QUIZ_BANK = {
 
         normal: [
             {
-                question: 'A CYP2C19 Normal Metabolizer is prescribed Clopidogrel after a heart procedure. What is expected?',
+                question: 'A CYP2C19 Normal Metabolizer is prescribed DRUG. What is expected?',
                 options: [
-                    'Clopidogrel cannot be activated — alternative therapy needed',
-                    'Clopidogrel is activated normally — standard antiplatelet protection',
-                    'Drug accumulates causing bleeding risk',
+                    'The drug cannot be activated — alternative therapy needed',
+                    'Drug is processed normally — standard dosing provides the expected effect',
+                    'Drug accumulates causing toxicity risk',
                     'The drug is cleared before it can have any effect',
                 ],
                 correctIndex: 1,
-                explanation: 'Normal metabolizers (*1/*1, activity sum = 2.0) activate Clopidogrel at the expected rate. Standard dosing provides effective antiplatelet therapy.',
+                explanation: 'Normal metabolizers (*1/*1, activity sum = 2.0) process drugs at the expected rate. Standard dosing guidelines are based on this phenotype.',
             },
             {
                 question: 'What does a CYP2C19 activity sum of 2.0 indicate?',
@@ -205,15 +205,15 @@ const QUIZ_BANK = {
 
         ultrarapid: [
             {
-                question: 'A CYP2C19 Ultrarapid Metabolizer is prescribed Omeprazole for a stomach ulcer. What is the concern?',
+                question: 'A CYP2C19 Ultrarapid Metabolizer is prescribed DRUG. What is the concern?',
                 options: [
-                    'Omeprazole accumulates and causes liver damage',
-                    'Omeprazole is broken down too quickly, reducing acid suppression and potentially allowing the ulcer to persist',
-                    'Omeprazole works exactly as expected',
+                    'The drug accumulates and causes liver damage',
+                    'The drug is broken down too quickly — levels may be too low to be effective',
+                    'The drug works exactly as expected',
                     'The drug converts to a toxic metabolite',
                 ],
                 correctIndex: 1,
-                explanation: 'CYP2C19*17/*17 gives an activity sum above 2.5. Omeprazole is inactivated faster than normal, reducing drug exposure and potentially making acid suppression insufficient.',
+                explanation: 'CYP2C19*17/*17 (activity sum > 2.5) produces excess enzyme. Drugs inactivated by CYP2C19 are broken down faster than normal, reducing drug exposure and potentially making standard doses insufficient.',
             },
             {
                 question: 'Which CYP2C19 allele is associated with increased enzyme activity (ultrarapid phenotype)?',
@@ -242,13 +242,15 @@ const QUIZ_BANK = {
 //   Array of 2 quiz question objects, or a fallback question if no match found
 // ─────────────────────────────────────────────────────────────────────────────
 export function getQuiz(gene, prediction, drug) {
-    const geneKey = (gene || '').toUpperCase()
-    const predKey = (prediction || '').toLowerCase().replace(' metabolizer', '').trim()
+    const geneKey  = (gene       || '').toUpperCase()
+    const predKey  = (prediction || '').toLowerCase().replace(' metabolizer', '').trim()
+    const drugName = drug
+        ? drug.charAt(0).toUpperCase() + drug.slice(1).toLowerCase()
+        : 'this drug'
 
     const questions = QUIZ_BANK[geneKey]?.[predKey]
 
     if (!questions) {
-        // Fallback: generic question if gene/prediction combo not found
         return [{
             question: `What does it mean to be a ${prediction} metabolizer for ${gene}?`,
             options: [
@@ -258,11 +260,17 @@ export function getQuiz(gene, prediction, drug) {
                 'The patient produces twice the normal enzyme amount',
             ],
             correctIndex: 1,
-            explanation: `Metabolizer phenotype is determined by the activity score sum of both alleles. A ${prediction} metabolizer has an activity pattern that affects how the body processes drugs metabolized by ${gene}.`,
+            explanation: `Metabolizer phenotype is determined by the activity score sum of both alleles. A ${prediction} metabolizer has an enzyme activity pattern that changes how ${gene}-metabolized drugs behave in the body.`,
         }]
     }
 
-    return questions
+    // Replace DRUG placeholder with the actual drug the user selected
+    return questions.map(q => ({
+        ...q,
+        question:    q.question.replace(/DRUG/g, drugName),
+        options:     q.options.map(o => o.replace(/DRUG/g, drugName)),
+        explanation: q.explanation.replace(/DRUG/g, drugName),
+    }))
 }
 
 export default QUIZ_BANK
