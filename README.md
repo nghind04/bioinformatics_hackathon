@@ -24,7 +24,7 @@ For each prediction, the result provides:
 | Frontend | React, Vite |
 | Backend / ML API | Python, Flask, flask-cors |
 | ML Model | scikit-learn RandomForestClassifier |
-| Data | PharmGKB ClinPGx 'clinicalVariants.tsv', 'relationshups.tsv', 'var_drug_ann.tsv'|
+| Data | PharmGKB ClinPGx `var_drug_ann.tsv` to `cleaned_data.csv`|
 |Model serialization | joblib |
 
 ### How to run the project
