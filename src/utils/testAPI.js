@@ -1,6 +1,6 @@
 import { MOCK_RESULT } from "../data/testResult";
 
-export async function analyzeGenotype(gene, variant, medication, alleles) {
+export async function analyzeGenotype(gene, variant, alleles, medication) {
     await new Promise(resolve => setTimeout(resolve, 2500))
 
     return {
